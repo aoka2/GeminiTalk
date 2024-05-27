@@ -61,6 +61,7 @@ response = gemini_pro.generate_content(text + "\nはじめまして！")
 print(response.text)
 while True:
     # プロンプトの設定
+    print("あなた>>>")
     prompt = input()
     if prompt == "end":
         break
