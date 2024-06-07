@@ -1,5 +1,8 @@
 import os
 import google.generativeai as genai
+import pyttsx3
+import time
+
 
 generation_config = {
   "temperature": 0.9,
@@ -28,10 +31,33 @@ safety_settings = [
 ]
 
 # API-KEYの設定
-genai.configure(api_key='AIzaSyDIOSHb1tAUisHOTexjoDXp8_jRc_eFKys')
+genai.configure(api_key='AIzaSyCBlL-cXc7WwWoM8hz3jP90Wt1pSXeoGzs')
+
+generation_config = {
+  "temperature": 1,
+  "top_p": 0.95,
+  "top_k": 64,
+  "max_output_tokens": 8192,
+  "response_mime_type": "text/plain",
+}
 
 # モデルの生成
-gemini_pro = genai.GenerativeModel("gemini-1.5-pro-latest")
+gemini_pro = genai.GenerativeModel(model_name="gemini-1.5-pro",generation_config=generation_config)
+
+engine = pyttsx3.init()
+
+#voice optimaiz
+rate = engine.getProperty('rate')
+engine.setProperty('rate', rate-50)
+
+#voice volume setting
+volume = engine.getProperty('volume')
+engine.setProperty('volume',volume+3.0)
+
+#voice toone setting
+voices = engine.getProperty('voices')
+engine.setProperty('voice',voices[0].id)
+print(voices)
 
 name = "山田"
 hobby = "ゲーム"
@@ -46,31 +72,30 @@ text += "\nここで、質問は一回に一つだけです。"
 text +="\n以下は女性役であるあなたのプロフィールです。このプロフィールに従って会話をしてください。\n性別：女性\n 名前：あい\n 趣味：マッチングアプリ\n仕事：IT企業のマネージャー\n あなたの性格：ぶりっこ\n一人称：私"
 text += "\nすべての文章に対して、恋愛シュミレーションゲームのような会話をする際に、情報が足りない場合は、足りない情報を具体的に私に質問してください。私がその情報を渡します。"
 text += "\n※あくまでもこれは会話です、私が入力した文章に反応をしてください。"
-print('\'end\' と打てばチャットが終了します。')
-print(text)
-response = gemini_pro.generate_content(text + "\nはじめまして！")
-print(response.text)
-while True:
-    try:
-      # プロンプトの設定
-      print("あなた>>>")
-      prompt =""
-      prompt = input()
-      if prompt == "end":
-          break
-      
-      if prompt != "":
-          # テキスト生成
-          response = gemini_pro.generate_content(prompt)
+text += "\n顔文字や絵文字などの文字は使わないでください。"
 
-          # 生成結果の表示
-          if response.candidate and response.candidate.safety_ratings:
-              print(response)
-              try:
-                  print(response.text)
-              except Exception as er:
-                  print(f"Error accessing response text: {er}")
-          else:
-              print("Response does not contain a valid Part or was blocked.")
-    except Exception as e:
-      print(f"An error occurred: {e}")
+print('\'end\' と打てばチャットが終了します。')
+response = gemini_pro.generate_content(text + "\nはじめまして！")
+
+#処理完了までの時間待機
+startSec = time.time()
+time.sleep(1.5)
+
+print(response.text)
+engine.say(response.text)
+engine.runAndWait()
+while True:
+    # プロンプトの設定
+    prompt = input()
+    if prompt == "end":
+        break
+    
+    if prompt != "":
+        prompt += "\n※あくまでもこれは会話です、私が入力した文章に反応をしてください。"
+        # テキスト生成
+        response = gemini_pro.generate_content(prompt)
+
+        # 生成結果の表示
+        engine.say(response.text)
+        print(response.text)
+        engine.runAndWait()
