@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プロフィール入力</title>
+    <link rel="stylesheet" href="static/stylesProfile.css">
+</head>
+<body>
+    <div class="container">
+        <div class="title">あなたのプロフィールを入力してください</div>
+        <form action="/set_profile" method="POST">
+            <div class="form-group">
+                <label for="name"><span>🧑</span>名前</label>
+                <input type="text" id="name" name="name">
+            </div>
+            <div class="form-group">
+                <label for="gender"><span>🚻</span>性別</label>
+                <input type="text" id="gender" name="gender">
+            </div>
+            <div class="form-group">
+                <label for="age"><span>🎂</span>年齢</label>
+                <input type="number" id="age" name="age">
+            </div>
+            <div class="form-group">
+                <label for="hobbies"><span>🎨</span>趣味</label>
+                <input type="text" id="hobbies" name="hobbies">
+            </div>
+            <div class="form-group">
+                <label for="occupation"><span>💼</span>職業</label>
+                <input type="text" id="occupation" name="occupation">
+            </div>
+            <div class="form-group">
+                <label for="mbti"><span>🔠</span>MBTI</label>
+                <input type="text" id="mbti" name="mbti">
+            </div>
+            <div class="button-container">
+                <button type="button" class="button back-button" onclick="location.href='http://127.0.0.1:5000'"><span>⬅</span>戻る</button>
+                <button type="submit" class="button"><span>➡</span>次へ</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
