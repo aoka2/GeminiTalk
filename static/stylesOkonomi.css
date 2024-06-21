@@ -33,7 +33,9 @@ body {
     padding: 15px;
     width: 28%;
     text-align: center;
-    transition: transform 0.2s;
+    transition: transform 0.2s, border 0.2s;
+    cursor: pointer;
+    border: 5px solid transparent;
 }
 .choice:hover {
     transform: scale(1.05);
@@ -48,4 +50,27 @@ body {
     font-size: 1.2em;
     font-weight: bold;
     color: #ffffff;
+}
+.button-container {
+    margin-top: 20px;
+    text-align: center;
+}
+.button {
+    background: linear-gradient(to bottom right, #ff80ab, #ffb3b3);
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    color: #ffffff;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    margin: 0 10px;
+}
+.button:hover {
+    background: linear-gradient(to bottom right, #ff4081, #ff80ab);
+    transform: scale(1.05);
+}
+.selected {
+    border-color: #ff4081;
 }
