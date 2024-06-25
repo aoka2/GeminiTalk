@@ -12,30 +12,30 @@
         <form action="/set_profile" method="POST">
             <div class="form-group">
                 <label for="name"><span>🧑</span>名前</label>
-                <input type="text" id="name" name="name">
+                <input type="text" id="name" name="name" value="{{name}}">
             </div>
             <div class="form-group">
                 <label for="gender"><span>🚻</span>性別</label>
-                <input type="text" id="gender" name="gender">
+                <input type="text" id="gender" name="gender" value="{{gender}}">
             </div>
             <div class="form-group">
                 <label for="age"><span>🎂</span>年齢</label>
-                <input type="number" id="age" name="age">
+                <input type="number" id="age" name="age" value="{{age}}">
             </div>
             <div class="form-group">
                 <label for="hobbies"><span>🎨</span>趣味</label>
-                <input type="text" id="hobbies" name="hobbies">
+                <input type="text" id="hobbies" name="hobbies" value="{{hobbies}}">
             </div>
             <div class="form-group">
                 <label for="occupation"><span>💼</span>職業</label>
-                <input type="text" id="occupation" name="occupation">
+                <input type="text" id="occupation" name="occupation" value="{{occupation}}">
             </div>
             <div class="form-group">
                 <label for="mbti"><span>🔠</span>MBTI</label>
-                <input type="text" id="mbti" name="mbti">
+                <input type="text" id="mbti" name="mbti" value="{{mbti}}">
             </div>
             <div class="button-container">
-                <button type="button" class="button back-button" onclick="location.href='http://127.0.0.1:5000'"><span>⬅</span>戻る</button>
+                <button type="button" class="button back-button" onclick="location.href='/'"><span>⬅</span>戻る</button>
                 <button type="submit" class="button"><span>➡</span>次へ</button>
             </div>
         </form>
