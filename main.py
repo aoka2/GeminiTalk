@@ -1,11 +1,12 @@
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 import google.generativeai as genai
+import time
 
 app = Flask(__name__)
 
 # API-KEYの設定
-genai.configure(api_key='AIzaSyC6m3rthOaCarBypLbBOgip8W6_OCr2ruk')
+genai.configure(api_key='AIzaSyAaDxTktWINmRMYAtE70gr4utPQfyrk4yo')
 
 # 生成設定
 generation_config = {
@@ -37,7 +38,7 @@ initial_prompt_template = (
     "あなたは女性役です。私と受け答えをしてください。\n"
     "返答の文章はできるだけ人間に寄せてください。\n"
     "私のMBTI診断の結果に合わせて喋り方を変えてください。\n"
-    "以下がプロフィールです。\n"
+    "以下が私のプロフィールです。\n"
     "性別：{gender}\n"
     "名前：{name}\n"
     "趣味：{hobbies}\n"
@@ -56,7 +57,9 @@ initial_prompt_template = (
     "仕事：IT企業のマネージャー\n"
     "あなたの性格：犬系彼女\n"
     "一人称：私\n"
-    "恋愛シミュレーションゲームのような会話をする際に、情報が足りない場合は、足りない情報を具体的に私に質問してください。"
+    "すべての文章に対して、恋愛シュミレーションゲームのような会話をする際に、情報が足りない場合は、足りない情報を具体的に私に質問してください。私がその情報を渡します。\n"
+    "※あくまでもこれは会話です、私が入力した文章に反応をしてください。\n"
+    "顔文字や絵文字などの文字は使わないでください。"
 )
 
 @app.route('/')
@@ -102,6 +105,7 @@ def chat():
     if user_input:
         try:
             response = chat_session.send_message(user_input)
+            time.sleep(2)
             return jsonify({'response': response.text})
         except Exception as e:
             return jsonify({'error': str(e)})

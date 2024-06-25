@@ -1,4 +1,35 @@
+/**************************************************************************************** */
+//音声入力系セットアップ
+
+//入力場所
+const resultDiv = document.querySelector('.result-div');
+
+SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
+let recognition = new SpeechRecognition();
+
+recognition.lang = 'ja-JP';
+recognition.interimResults = true;
+recognition.continuous = true;
+
+let finalTranscript = ''; // 確定した(黒の)認識結果
+
+recognition.onresult = (event) => {
+    let interimTranscript = ''; // 暫定(灰色)の認識結果
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+    let transcript = event.results[i][0].transcript;
+    if (event.results[i].isFinal) {
+        finalTranscript += transcript;
+    } else {
+        interimTranscript = transcript;
+    }
+    }
+    resultDiv.value = finalTranscript +  interimTranscript;
+}
+/*************************************************************************************** */
+
 async function sendMessage() {
+    recognition.stop();
+    console.log("sendMessage、32行目を実行")
     const userInput = document.getElementById('userInput').value;
     const chatLog = document.getElementById('chatLog');
     let messageDiv = document.createElement('div');
@@ -22,11 +53,22 @@ async function sendMessage() {
             messageDiv.innerHTML = `<div class="message-content" style="color: red;">エラー: ${data.error}</div>`;
         } else {
             messageDiv.innerHTML = `<div class="message-content">${data.response}</div>`;
+            let url = `https://deprecatedapis.tts.quest/v2/voicevox/audio/?text=${data.response}&key=f23_922-Z445808`;
+            let audio = new Audio(url)
+            audio.play();
         }
         chatLog.appendChild(messageDiv);
+        document.getElementById('userInput').value = '';
+        recognition.start();
+        //入力欄初期化・音声入力スタート
     } catch (error) {
         console.error('リクエスト中にエラーが発生しました:', error);
     }
 
-    document.getElementById('userInput').value = '';
+    
+}
+
+
+window.onload = function(){
+    recognition.start();
 }
