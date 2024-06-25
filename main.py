@@ -1,17 +1,12 @@
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 import google.generativeai as genai
-from flask_session import Session
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # セッションを使用するために必要
 
 # API-KEYの設定
-genai.configure(api_key='AIzaSyC6m3rthOaCarBypLbBOgip8W6_OCr2ruk')
-
-#セッションの設定
-app.config['SESSION_TYPE'] = 'filesystem'
-Session(app)
+genai.configure(api_key='AIzaSyD6POyB0Kq0WHnZ0-QPDFwwLESVv1rFf3M')
 
 # 生成設定
 generation_config = {
@@ -144,52 +139,17 @@ initial_prompt_template = {
     )
 }
 
-#GETをPOSTに変更
-@app.route('/reset_session', methods=['POST'])
-def reset_session():
-    session.clear()  # セッションをクリア
-    return redirect(url_for('profile'))  # プロフィールページにリダイレクト
-
-
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/profile.html', methods=['GET', 'POST'])
+@app.route('/profile.html')
 def profile():
-    if request.method == 'POST':
-        session['name'] = request.form['name']
-        session['gender'] = request.form['gender']
-        session['age'] = request.form['age']
-        session['hobbies'] = request.form['hobbies']
-        session['occupation'] = request.form['occupation']
-        session['mbti'] = request.form['mbti']
-        return redirect(url_for('AIprofile.html'))
+    return render_template('profile.html')
 
-    return render_template('profile.html',
-        name=session.get('name', ''),
-        gender=session.get('gender', ''),
-        age=session.get('age', ''),
-        hobbies=session.get('hobbies', ''),
-        occupation=session.get('occupation', ''),
-        mbti=session.get('mbti', ''))
-
-@app.route('/AIprofile.html', methods=['GET', 'POST'])
+@app.route('/AIprofile.html')
 def AIprofile():
-    if request.method == 'POST':
-        session['ai_name'] = request.form['name']
-        session['ai_gender'] = request.form['gender']
-        session['ai_age'] = request.form['age']
-        session['ai_hobbies'] = request.form['hobbies']
-        session['ai_occupation'] = request.form['occupation']
-        return redirect(url_for('profile.html'))  # 適切な次のページにリダイレクト
-
-    return render_template('AIprofile.html',
-        ai_name=session.get('ai_name', ''),
-        ai_gender=session.get('ai_gender', ''),
-        ai_age=session.get('ai_age', ''),
-        ai_hobbies=session.get('ai_hobbies', ''),
-        ai_occupation=session.get('ai_occupation', ''))
+    return render_template('AIprofile.html')
 
 @app.route('/OkonomiJyosei.html')
 def OkonomiJyosei():
@@ -201,22 +161,39 @@ def chatbot():
 
 @app.route('/set_profile', methods=['POST'])
 def set_profile():
-    session['name'] = request.form['name']
-    session['gender'] = request.form['gender']
-    session['age'] = request.form['age']
-    session['hobbies'] = request.form['hobbies']
-    session['occupation'] = request.form['occupation']
-    session['mbti'] = request.form['mbti']
+    name = request.form.get('name')
+    gender = request.form.get('gender')
+    hobbies = request.form.get('hobbies')
+    occupation = request.form.get('occupation')
+    mbti = request.form.get('mbti')
+
+    # プロフィールをセッションに保存
+    session['profile'] = {
+        'name': name,
+        'gender': gender,
+        'hobbies': hobbies,
+        'occupation': occupation,
+        'mbti': mbti
+    }
 
     return redirect(url_for('AIprofile'))
 
 @app.route('/set_AIprofile', methods=['POST'])
 def set_AIprofile():
-    session['ai_name'] = request.form['name']
-    session['ai_gender'] = request.form['gender']
-    session['ai_age'] = request.form['age']
-    session['ai_hobbies'] = request.form['hobbies']
-    session['ai_occupation'] = request.form['occupation']
+    ai_name = request.form.get('name')
+    ai_gender = request.form.get('gender')
+    ai_age = request.form.get('age')
+    ai_hobbies = request.form.get('hobbies')
+    ai_occupation = request.form.get('occupation')
+
+    # AIのプロフィールをセッションに保存
+    session['AIprofile'] = {
+        'ai_name': ai_name,
+        'ai_gender': ai_gender,
+        'ai_age': ai_age,
+        'ai_hobbies': ai_hobbies,
+        'ai_occupation': ai_occupation
+    }
 
     return redirect(url_for('OkonomiJyosei'))
 
