@@ -144,6 +144,9 @@ initial_prompt_template = {
 @app.route('/')
 def index():
     return render_template('index.html')
+# if __name__ == "__main__":
+#     app.run(debug=True, port=443, ssl_context=('.\certs\server.crt', '.\certs\server.key'), host='0.0.0.0')
+
 
 @app.route('/profile.html')
 def profile():
@@ -240,6 +243,21 @@ def chat():
         except Exception as e:
             return jsonify({'error': str(e)})
     return jsonify({'error': 'No message provided'})
+import ssl
+# 絶対パスを取得する
+crt_path = r'.\server.crt'
+key_path = r'.\server.key'
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# ファイルの存在を確認
+if not os.path.isfile(crt_path):
+    raise FileNotFoundError(f"Certificate file not found: {crt_path}")
+if not os.path.isfile(key_path):
+    raise FileNotFoundError(f"Key file not found: {key_path}")
+
+# SSLコンテキストを設定
+context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+context.load_cert_chain(certfile=crt_path, keyfile=key_path)
+
+# HTTPSでアプリを実行
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=334, ssl_context=context, threaded=True, debug=True)

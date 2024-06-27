@@ -4,6 +4,7 @@
 //入力場所
 const resultDiv = document.querySelector('.result-div');
 
+
 SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
 let recognition = new SpeechRecognition();
 
@@ -14,9 +15,11 @@ recognition.continuous = true;
 let finalTranscript = ''; // 確定した(黒の)認識結果
 
 recognition.onresult = (event) => {
+    console.log('音声認識実行');
     let interimTranscript = ''; // 暫定(灰色)の認識結果
     for (let i = event.resultIndex; i < event.results.length; i++) {
-    let transcript = event.results[i][0].transcript;
+        
+        let transcript = event.results[i][0].transcript;
     if (event.results[i].isFinal) {
         finalTranscript += transcript;
     } else {
@@ -59,7 +62,6 @@ async function sendMessage() {
         }
         chatLog.appendChild(messageDiv);
         document.getElementById('userInput').value = '';
-        recognition.start();
         //入力欄初期化・音声入力スタート
     } catch (error) {
         console.error('リクエスト中にエラーが発生しました:', error);
@@ -70,5 +72,13 @@ async function sendMessage() {
 
 
 window.onload = function(){
-    recognition.start();
+    const startBtn = document.querySelector('#start-btn');
+    const stopBtn = document.querySelector('#stop-btn');
+
+    startBtn.onclick = () => {
+        recognition.start();
+      }
+      stopBtn.onclick = () => {
+        recognition.stop();
+      }
 }
