@@ -9,9 +9,12 @@
 <body>
     <div class="chat-container">
         <h1>恋愛シミュレーションチャットボット</h1>
-        <div id="chatLog">まずは最初の挨拶をしましょう。</div>
+        <div id="chatLog"></div>
         <input type="text" id="userInput" class="result-div" placeholder="">
-        <button type="submit" onclick="sendMessage()">送信</button>
+
+        <button onclick="sendMessage()">送信</button>
+        <button id="start-btn">音声入力オン</button>
+        <button id="stop-btn">音声入力オフ</button>
     </div>
 </body>
 </html>
