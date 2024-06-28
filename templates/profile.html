@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>プロフィール入力</title>
     <link rel="stylesheet" href="static/stylesProfile.css">
+    <script src="static/scriptProfile.js"></script>
 </head>
 <body>
     <div class="container">
         <div class="title">あなたのプロフィールを入力してください</div>
-        <form action="/set_profile" method="POST">
+        <form action="/set_profile" method="POST" onsubmit="return validateProfileForm()">
             <div class="form-group">
                 <label for="name"><span>🧑</span>名前</label>
                 <input type="text" id="name" name="name" value="{{name}}">

@@ -8,6 +8,13 @@ body {
     margin: 0;
     font-family: 'Arial', sans-serif;
 }
+.error {
+    color: black;
+    font-size: 12px;
+}
+::placeholder {
+    color: red;
+}
 .container {
     background-color: white;
     border-radius: 15px;

@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 import google.generativeai as genai
 import time
+import json
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # セッションを使用するために必要
@@ -165,6 +166,7 @@ def chatbot():
 def set_profile():
     name = request.form.get('name')
     gender = request.form.get('gender')
+    age = request.form.get('age')
     hobbies = request.form.get('hobbies')
     occupation = request.form.get('occupation')
     mbti = request.form.get('mbti')
@@ -173,6 +175,7 @@ def set_profile():
     session['profile'] = {
         'name': name,
         'gender': gender,
+        'age' : age,
         'hobbies': hobbies,
         'occupation': occupation,
         'mbti': mbti
