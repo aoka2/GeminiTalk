@@ -56,7 +56,7 @@ async function sendMessage() {
             messageDiv.innerHTML = `<div class="message-content" style="color: red;">エラー: ${data.error}</div>`;
         } else {
             messageDiv.innerHTML = `<div class="message-content">${data.response}</div>`;
-            let url = `https://deprecatedapis.tts.quest/v2/voicevox/audio/?text=${data.response}&key=f23_922-Z445808`;
+            let url = `https://deprecatedapis.tts.quest/v2/voicevox/audio/?text=${data.response}&key=d-43s0230-T-Q_L`;
             let audio = new Audio(url)
             audio.play();
         }
