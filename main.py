@@ -4,7 +4,7 @@ import google.generativeai as genai
 import time
 import json
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder='static', template_folder='templates')
 app.secret_key = 'your_secret_key'  # セッションを使用するために必要
 
 # API-KEYの設定
