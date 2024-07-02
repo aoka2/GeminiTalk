@@ -22,7 +22,7 @@
         hasSpaces(input.value);
     };
     function hasSpaces(str){
-        if(str.includes(' ') || str.includes('　')){
+        if(str.startsWith(' ', 0) || str.startsWith('　', 0)){
         document.getElementById('userInput').value = '';
         }
     }
