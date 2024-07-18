@@ -1,84 +1,87 @@
-/**************************************************************************************** */
-//音声入力系セットアップ
+        let chatHistory = []; // チャット履歴
+        let canSendMessage = true; // メッセージを送信できるかどうか
 
-//入力場所
-const resultDiv = document.querySelector('.result-div');
+        async function sendMessage() {
+            if (!canSendMessage) return; // メッセージが送信できない場合は何もしない
 
+            const userInput = document.getElementById("userInput");
+            const chatLog = document.getElementById("chatLog");
+            const historyLog = document.getElementById("historyLog");
+            const userMessageValue = userInput.value.trim();
 
-SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
-let recognition = new SpeechRecognition();
+            if (userMessageValue !== "") {
+                // メッセージ送信直前に入力欄を空にする
+                userInput.value = "";
+                canSendMessage = false; // メッセージが送信されたことを記録
 
-recognition.lang = 'ja-JP';
-recognition.interimResults = true;
-recognition.continuous = true;
+                // 1秒後に再度メッセージを送信可能にする
+                setTimeout(() => {
+                    canSendMessage = true;
+                }, 1000);
 
-let finalTranscript = ''; // 確定した(黒の)認識結果
+                // ユーザーのメッセージを追加
+                const userMessage = `<div class="message user">${userName}: ${userMessageValue}</div>`;
+                chatHistory.push(userMessage);
+                historyLog.innerHTML += userMessage;
 
-recognition.onresult = (event) => {
-    console.log('音声認識実行');
-    let interimTranscript = ''; // 暫定(灰色)の認識結果
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-        
-        let transcript = event.results[i][0].transcript;
-    if (event.results[i].isFinal) {
-        finalTranscript += transcript;
-    } else {
-        interimTranscript = transcript;
-    }
-    }
-    resultDiv.value = finalTranscript +  interimTranscript;
-}
-/*************************************************************************************** */
+                try {
+                    // ボットにメッセージを送信
+                    const response = await fetch('/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ message: userMessageValue }),
+                    });
+                    const data = await response.json();
 
-async function sendMessage() {
-    recognition.stop();
-    console.log("sendMessage、32行目を実行")
-    const userInput = document.getElementById('userInput').value;
-    const chatLog = document.getElementById('chatLog');
-    let messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', 'user');
-    messageDiv.innerHTML = `<div class="message-content">${userInput}</div>`;
-    chatLog.appendChild(messageDiv);
+                    // ボットの返答を追加
+                    const botMessage = `<div class="message bot">${aiName}: ${data.response || "エラーが発生しました。"}</div>`;
+                    chatHistory.push(botMessage);
+                    historyLog.innerHTML += botMessage;
 
-    try {
-        const response = await fetch('/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({message: userInput})
-        });
-        const data = await response.json();
+                    // 最新のメッセージだけを表示
+                    chatLog.innerHTML = botMessage;
+                } catch (error) {
+                    // エラー時のメッセージを追加
+                    const botMessage = `<div class="message bot">${aiName}: エラーが発生しました。</div>`;
+                    chatHistory.push(botMessage);
+                    historyLog.innerHTML += botMessage;
 
-        messageDiv = document.createElement('div');
-        messageDiv.classList.add('message', 'bot');
-        if (data.error) {
-            messageDiv.innerHTML = `<div class="message-content" style="color: red;">エラー: ${data.error}</div>`;
-        } else {
-            messageDiv.innerHTML = `<div class="message-content">${data.response}</div>`;
-            let url = `https://deprecatedapis.tts.quest/v2/voicevox/audio/?text=${data.response}&key=d-43s0230-T-Q_L`;
-            let audio = new Audio(url)
-            audio.play();
+                    // 最新のメッセージだけを表示
+                    chatLog.innerHTML = botMessage;
+                }
+
+                chatLog.scrollTop = chatLog.scrollHeight;
+            }
         }
-        chatLog.appendChild(messageDiv);
-        document.getElementById('userInput').value = '';
-        //入力欄初期化・音声入力スタート
-    } catch (error) {
-        console.error('リクエスト中にエラーが発生しました:', error);
-    }
 
-    
-}
+        function checkEnter(event) {
+            if (event.key === "Enter") {
+                event.preventDefault(); // デフォルトのEnterキーの動作を防ぐ
+                sendMessage();
+            }
+        }
 
+        function toggleHistory() {
+            const historyModal = document.getElementById("historyModal");
+            historyModal.style.display = historyModal.style.display === "block" ? "none" : "block";
+        }
 
-window.onload = function(){
-    const startBtn = document.querySelector('#start-btn');
-    const stopBtn = document.querySelector('#stop-btn');
+        window.onclick = function(event) {
+            const historyModal = document.getElementById("historyModal");
+            if (event.target === historyModal) {
+                historyModal.style.display = "none";
+            }
+        }
 
-    startBtn.onclick = () => {
-        recognition.start();
-      }
-      stopBtn.onclick = () => {
-        recognition.stop();
-      }
-}
+        function spacesC(){
+            const input = document.getElementById('userInput');
+            hasSpaces(input.value);
+        };
+
+        function hasSpaces(str){
+            if(str.startsWith(' ', 0) || str.startsWith('　', 0)){
+                document.getElementById('userInput').value = '';
+            }
+        }

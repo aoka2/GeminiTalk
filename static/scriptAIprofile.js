@@ -4,6 +4,7 @@ function validateAIProfileForm() {
     var age = document.getElementById('age');
     var hobbies = document.getElementById('hobbies');
     var occupation = document.getElementById('occupation');
+    var personality = document.getElementById('personality');
     var isValid = true;
 
     // Reset previous error states
@@ -12,6 +13,7 @@ function validateAIProfileForm() {
     age.classList.remove('error');
     hobbies.classList.remove('error');
     occupation.classList.remove('error');
+    personality.classList.remove('error');
 
     // Clear previous error messages
     name.placeholder = '';
@@ -19,6 +21,7 @@ function validateAIProfileForm() {
     age.placeholder = '';
     hobbies.placeholder = '';
     occupation.placeholder = '';
+    personality.placeholder = '';
 
     if (!isNaN(name.value)) {
         name.classList.add('error');
@@ -50,5 +53,12 @@ function validateAIProfileForm() {
         occupation.placeholder = '職業を入力してください';
         isValid = false;
     }
+    if(!isNaN(personality.value) || /[０-９]/.test(personality.value)){
+        personality.classList.add('error');
+        personality.value='';
+        personality.placeholder = 'お好みの性格を入力してください';
+        isValid = false;
+    }
+
     return isValid;
 }

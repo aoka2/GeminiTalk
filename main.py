@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, s
 import google.generativeai as genai
 import time
 import json
+import inspect
 
 app = Flask(__name__,static_folder='static', template_folder='templates')
 app.secret_key = 'your_secret_key'  # セッションを使用するために必要
@@ -42,12 +43,12 @@ initial_prompt_template = {
         "あなたは{ai_gender}性役です。私と受け答えをしてください。\n"
         "返答の文章はできるだけ人間に寄せてください。\n"
         "私のMBTI診断の結果に合わせて喋り方を変えてください。\n"
+        "私の性格はネット上にあるMBTI診断を参照して受けとってください。\n"
         "以下がプロフィールです。\n"
         "性別：{gender}\n"
         "名前：{name}\n"
         "趣味：{hobbies}\n"
         "仕事：{occupation}\n"
-        "性格：やんちゃ\n"
         "MBTI : {mbti}\n"
         "また、アドバイスなどの人間味の無い提案は、恋愛シミュレーションゲームでは全く行われないので、"
         "こちらが求めていなければ出さないようにしてください。\n"
@@ -59,7 +60,7 @@ initial_prompt_template = {
         "年齢：{ai_age}\n"
         "趣味：{ai_hobbies}\n"
         "仕事：{ai_occupation}\n"
-        "あなたの性格：犬系彼女\n"
+        "あなたの性格：{ai_personality}\n"
         "一人称：私\n"
         "恋愛シミュレーションゲームのような会話をする際に、情報が足りない場合は、足りない情報を具体的に私に質問してください。"
     ),
@@ -68,12 +69,12 @@ initial_prompt_template = {
         "あなたは{ai_gender}性役です。私と受け答えをしてください。\n"
         "返答の文章はできるだけ人間に寄せてください。\n"
         "私のMBTI診断の結果に合わせて喋り方を変えてください。\n"
+        "私の性格はネット上にあるMBTI診断を参照して受けとってください。\n"
         "以下がプロフィールです。\n"
         "性別：{gender}\n"
         "名前：{name}\n"
         "趣味：{hobbies}\n"
         "仕事：{occupation}\n"
-        "性格：やんちゃ\n"
         "MBTI : {mbti}\n"
         "また、アドバイスなどの人間味の無い提案は、恋愛シミュレーションゲームでは全く行われないので、"
         "こちらが求めていなければ出さないようにしてください。\n"
@@ -85,7 +86,7 @@ initial_prompt_template = {
         "年齢：{ai_age}\n"
         "趣味：{ai_hobbies}\n"
         "仕事：{ai_occupation}\n"
-        "あなたの性格：犬系彼女\n"
+        "あなたの性格：{ai_personality}\n"
         "一人称：私\n"
         "恋愛シミュレーションゲームのような会話をする際に、情報が足りない場合は、足りない情報を具体的に私に質問してください。"
     ),
@@ -94,12 +95,12 @@ initial_prompt_template = {
         "あなたは{ai_gender}性役です。私と受け答えをしてください。\n"
         "返答の文章はできるだけ人間に寄せてください。\n"
         "私のMBTI診断の結果に合わせて喋り方を変えてください。\n"
+        "私の性格はネット上にあるMBTI診断を参照して受けとってください。\n"
         "以下がプロフィールです。\n"
         "性別：{gender}\n"
         "名前：{name}\n"
         "趣味：{hobbies}\n"
         "仕事：{occupation}\n"
-        "性格：やんちゃ\n"
         "MBTI : {mbti}\n"
         "また、アドバイスなどの人間味の無い提案は、恋愛シミュレーションゲームでは全く行われないので、"
         "こちらが求めていなければ出さないようにしてください。\n"
@@ -111,20 +112,20 @@ initial_prompt_template = {
         "年齢：{ai_age}\n"
         "趣味：{ai_hobbies}\n"
         "仕事：{ai_occupation}\n"
-        "あなたの性格：犬系彼女\n"
+        "あなたの性格：{ai_personality}\n"
         "一人称：私\n"
         "恋愛シミュレーションゲームのような会話をする際に、情報が足りない場合は、足りない情報を具体的に私に質問してください。"
     ),
-    "スケベデート": (
-        "今日はスケベデートの日です。あなたは{ai_gender}性役です。私と受け答えをしてください。\n"
+    "海岸デート": (
+        "今日は海岸デートの日です。あなたは{ai_gender}性役です。私と受け答えをしてください。\n"
         "返答の文章はできるだけ人間に寄せてください。\n"
         "私のMBTI診断の結果に合わせて喋り方を変えてください。\n"
+        "私の性格はネット上にあるMBTI診断を参照して受けとってください。\n"
         "以下がプロフィールです。\n"
         "性別：{gender}\n"
         "名前：{name}\n"
         "趣味：{hobbies}\n"
         "仕事：{occupation}\n"
-        "性格：やんちゃ\n"
         "MBTI : {mbti}\n"
         "また、アドバイスなどの人間味の無い提案は、恋愛シミュレーションゲームでは全く行われないので、"
         "こちらが求めていなければ出さないようにしてください。\n"
@@ -136,7 +137,7 @@ initial_prompt_template = {
         "年齢：{ai_age}\n"
         "趣味：{ai_hobbies}\n"
         "仕事：{ai_occupation}\n"
-        "あなたの性格：犬系彼女\n"
+        "あなたの性格：{ai_personality}\n"
         "一人称：私\n"
         "恋愛シミュレーションゲームのような会話をする際に、情報が足りない場合は、足りない情報を具体的に私に質問してください。"
     )
@@ -163,7 +164,9 @@ def OkonomiJyosei():
 
 @app.route('/chatbot.html')
 def chatbot():
-    return render_template('chatbot.html')
+    query = request.args.get('date_spot')
+    print(inspect.currentframe().f_code.co_name)
+    return render_template('chatbot.html',date_spot=query)
 
 @app.route('/set_profile', methods=['POST'])
 def set_profile():
@@ -193,6 +196,7 @@ def set_AIprofile():
     ai_age = request.form.get('age')
     ai_hobbies = request.form.get('hobbies')
     ai_occupation = request.form.get('occupation')
+    ai_personality = request.form.get('personality')
 
     # AIのプロフィールをセッションに保存
     session['AIprofile'] = {
@@ -200,7 +204,8 @@ def set_AIprofile():
         'ai_gender': ai_gender,
         'ai_age': ai_age,
         'ai_hobbies': ai_hobbies,
-        'ai_occupation': ai_occupation
+        'ai_occupation': ai_occupation,
+        'ai_personality': ai_personality
     }
 
     return redirect(url_for('OkonomiJyosei'))
@@ -223,7 +228,8 @@ def set_OkonomiJyosei():
         ai_gender=AIprofile.get('ai_gender'),
         ai_age=AIprofile.get('ai_age'),
         ai_hobbies=AIprofile.get('ai_hobbies'),
-        ai_occupation=AIprofile.get('ai_occupation')
+        ai_occupation=AIprofile.get('ai_occupation'),
+        ai_personality=AIprofile.get('ai_personality')
     )
 
     # 初回メッセージ送信
@@ -233,7 +239,9 @@ def set_OkonomiJyosei():
     except Exception as e:
         print(f"初回メッセージの送信中にエラーが発生しました: {e}")
 
-    return redirect(url_for('chatbot'))
+    print(inspect.currentframe().f_code.co_name)
+    url = url_for('chatbot')+'?date_spot='+date_preference
+    return redirect(url)
 
 @app.route('/chat', methods=['POST'])
 def chat():

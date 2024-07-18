@@ -1,32 +1,41 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>恋愛シミュレーションチャットボット</title>
-    <link rel="stylesheet" href="static/style/stylesChatbot.css">
-    <script src="static/scripts.js" defer></script>
-</head>
-<body>
-    <div class="chat-container">
-        <h1>恋愛シミュレーションチャットボット</h1>
-        <div id="chatLog"></div>
-        <input type="text" id="userInput" class="result-div" placeholder="" required="required" oninput="spacesC()">
+    <!DOCTYPE html>
+    <html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>恋愛シミュレーションゲーム</title>
+        <link rel="stylesheet" href="static/style/stylesChatbot.css">
 
-        <button onclick="sendMessage()">送信</button>
-        <button id="start-btn">音声入力オン</button>
-        <button id="stop-btn">音声入力オフ</button>
-    </div>
-    <script>
-    function spacesC(){
-        const input = document.getElementById('userInput');
-        hasSpaces(input.value);
-    };
-    function hasSpaces(str){
-        if(str.startsWith(' ', 0) || str.startsWith('　', 0)){
-        document.getElementById('userInput').value = '';
-        }
-    }
-    </script>
-</body>
+        <!-- 画像転送用 -->
+        <style>
+            body{
+                background-image: url('/static/images/{{date_spot}}.jpg');
+            }
+        </style>
 
-</html>
+        <!-- サーバーから渡された値をJavaScript変数に保存　※jsに入力するとデフォルト変数が出たため -->
+        <script>
+            const aiName = "{{ session.AIprofile.ai_name }}";
+            const userName = "{{ session.profile.name }}";  
+        </script>
+
+        <script src="static/scripts.js" defer></script>
+    </head>
+    <body>
+        <div class="header">
+            <button onclick="toggleHistory()">履歴</button>
+        </div>
+        
+        <div class="chat-log" id="chatLog"></div>
+        <div class="user-input">
+            <input type="text" id="userInput" placeholder="メッセージを入力してください" onkeydown="checkEnter(event)">
+            <button onclick="sendMessage(`{{ session['AIprofile']['ai_name']}}`,`{{ session['profile']['name'] }}`)"　disabled>送信</button>
+        </div>
+        <div class="modal" id="historyModal">
+            <div class="modal-content" id="historyContent">
+                <span class="close" onclick="toggleHistory()">&times;</span>
+                <div id="historyLog"></div>
+            </div>
+        </div>
+    </body>
+    </html>
