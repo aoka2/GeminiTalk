@@ -5,30 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>シーン選択</title>
     <link rel="stylesheet" href="static/style/stylesOkonomi.css">
+    <!--追加7/19-->
+    <script>
+         function handleSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const selectedRadio = form.querySelector('input[name="date_preference"]:checked');
+
+            if (selectedRadio) {
+                const value1 = selectedRadio.getAttribute('data-value1');
+                console.log('Value 1:', value1);
+
+                // hidden input に値を設定してフォームを送信する
+                document.getElementById('hiddenValue1').value = value1;
+                form.submit();
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="container">
         <div class="title">シーン（1～3の好みで選んでください）</div>
         <form action="/set_OkonomiJyosei" method="POST">
             <div class="choices">
+                <!--value1追加-->
                 <div class="choice">
-                    <input type="radio" id="date1" name="date_preference" value="ご飯デート">
+                    <input type="radio" id="date1" name="date_preference" value="カフェデート"data-value1="カフェ女の子">
                     <label for="date1">
-                        <img src="static/images/myedit_ai_image_0705131046.jpg" alt="ご飯デート">
-                        <div class="choice-text">1 ご飯デート</div>
+                        <img src="static/images/カフェデートJyosei.jpg" alt="カフェデート">
+                        <div class="choice-text">1 カフェデート</div>
                     </label>
                 </div>
                 <div class="choice">
-                    <input type="radio" id="date2" name="date_preference" value="ドライブデート">
+                    <input type="radio" id="date2" name="date_preference" value="ドライブデート" data-value1="ドライブ女の子">
                     <label for="date2">
-                        <img src="static/images/myedit_ai_image_0705131112_0.jpg" alt="ドライブデート">
+                        <img src="static/images/ドライブデートJyosei.jpg" alt="ドライブデート">
                         <div class="choice-text">2 ドライブデート</div>
                     </label>
                 </div>
                 <div class="choice">
-                    <input type="radio" id="date3" name="date_preference" value="海岸デート">
+                    <input type="radio" id="date3" name="date_preference" value="海岸デート" data-value1="海岸女の子">
                     <label for="date3">
-                        <img src="static/images/116a970f-ed42-40bb-1e59-d64735fecf00.jpg" alt="海岸デート">
+                        <img src="static/images/海岸デートJyosei.jpg" alt="海岸デート">
                         <div class="choice-text">3 海岸デート</div>
                     </label>
                 </div>
@@ -37,6 +55,8 @@
                 <button type="button" class="button" onclick="location.href='AIprofile.html'">⬅ 戻る</button>
                 <button type="submit" class="button">次へ<span>➡</span></button>
             </div>
+            <!--追加7/19-->
+            <input type="hidden" id="hiddenValue1" name="hiddenValue1">
         </form>
     </div>
 </body>

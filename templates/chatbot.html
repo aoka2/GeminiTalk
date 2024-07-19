@@ -26,6 +26,20 @@
             <button onclick="toggleHistory()">履歴</button>
         </div>
         
+        <div class="center-image">
+            <img src="/static/images/{{hiddenValue1}}.jpg" alt="Girl"
+                style="
+                    width: 700px;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    border-radius: 15px;
+                    display: flex;
+                "
+            >  
+        </div>
+
         <div class="chat-log" id="chatLog"></div>
         <div class="user-input">
             <input type="text" id="userInput" placeholder="メッセージを入力してください" onkeydown="checkEnter(event)">

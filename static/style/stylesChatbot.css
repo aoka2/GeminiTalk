@@ -94,10 +94,10 @@ button:hover {
     text-decoration: none;
     cursor: pointer;
 }
-<!--追加-->
+/*追加*/
 .center-image {
     position: absolute;
-    top: 50%;
+    top: 44%;
     left: 50%;
     transform: translate(-50%, -50%);
     max-width: 50%;

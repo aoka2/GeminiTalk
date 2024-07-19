@@ -43,7 +43,8 @@ body {
 .choice img {
     border-radius: 15px;
     width: 100%;
-    height: auto;
+    height: 70%;
+
 }
 .choice-text {
     margin-top: 10px;

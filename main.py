@@ -64,8 +64,8 @@ initial_prompt_template = {
         "一人称：私\n"
         "恋愛シミュレーションゲームのような会話をする際に、情報が足りない場合は、足りない情報を具体的に私に質問してください。"
     ),
-    "ご飯デート": (
-        "今日はご飯デートの日です。異性と初めての食事を楽しみながら、楽しい会話を続けましょう。\n"
+    "カフェデート": (
+        "今日はカフェデートの日です。異性と初めての食事を楽しみながら、楽しい会話を続けましょう。\n"
         "あなたは{ai_gender}性役です。私と受け答えをしてください。\n"
         "返答の文章はできるだけ人間に寄せてください。\n"
         "私のMBTI診断の結果に合わせて喋り方を変えてください。\n"
@@ -165,8 +165,9 @@ def OkonomiJyosei():
 @app.route('/chatbot.html')
 def chatbot():
     query = request.args.get('date_spot')
+    query1 = request.args.get('hiddenValue1')
     print(inspect.currentframe().f_code.co_name)
-    return render_template('chatbot.html',date_spot=query)
+    return render_template('chatbot.html',date_spot=query,hiddenValue1=query1)
 
 @app.route('/set_profile', methods=['POST'])
 def set_profile():
@@ -240,7 +241,7 @@ def set_OkonomiJyosei():
         print(f"初回メッセージの送信中にエラーが発生しました: {e}")
 
     print(inspect.currentframe().f_code.co_name)
-    url = url_for('chatbot')+'?date_spot='+date_preference
+    url = url_for('chatbot')+'?date_spot='+date_preference+'&hiddenValue1='+date_preference+'Jyosei'
     return redirect(url)
 
 @app.route('/chat', methods=['POST'])
